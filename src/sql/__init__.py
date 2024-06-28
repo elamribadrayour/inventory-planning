@@ -1,0 +1,1 @@
+"""Duckdb sql queries"""

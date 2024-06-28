@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  inventory-planning-prepare:
+    user: root
+    image: "inventory_planning:0.1"
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      CACHE_DIR: "/code/data"
+    volumes:
+      - ./src/:/code/job
+      - ./.cache:/code/data
+    command: python main.py prepare
+
+  inventory-planning-train:
+    user: root
+    image: "inventory_planning:0.1"
+    environment:
+      CACHE_DIR: "/code/data"
+      MODEL_NAME: "xgboost-regressor"
+    volumes:
+      - ./src/:/code/job
+      - ./.cache:/code/data
+    command: python main.py train
+
+  inventory-planning-evaluate:
+    user: root
+    image: "inventory_planning:0.1"
+    environment:
+      CACHE_DIR: "/code/data"
+      EXEC_DATE: "2024-06-28-08-31-23"
+      MODEL_NAME: "xgboost-regressor"
+    volumes:
+      - ./src/:/code/job
+      - ./.cache:/code/data
+    command: python main.py evaluate
+
+  inventory-planning-predict:
+    user: root
+    image: "inventory_planning:0.1"
+    environment:
+      CACHE_DIR: "/code/data"
+      EXEC_DATE: "2024-06-28-08-03-17"
+      MODEL_NAME: "xgboost-regressor"
+    volumes:
+      - ./src/:/code/job
+      - ./.cache:/code/data
+    command: python main.py predict
+
+  inventory-planning-expose:
+    user: root
+    image: "inventory_planning:0.1"
+    environment:
+      API_KEY: "12345"
+      CACHE_DIR: "/code/data"
+      EXEC_DATE: "2024-06-27-15-32-34"
+      MODEL_NAME: "xgboost-regressor"
+    ports:
+      - 8080:8080
+    volumes:
+      - ./src:/code/job
+      - ./.cache:/code/data
+    command: python main.py expose
