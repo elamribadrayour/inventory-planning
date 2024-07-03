@@ -39,7 +39,7 @@ def train(
 ) -> None:
     helpers.logger.init()
     x_train, y_train = helpers.download.get_train_data(cache_dir=cache_dir)
-    grid_search = helpers.model.get_model()
+    grid_search = helpers.model.get_model(name=model_name)
     model = tasks.train.train(
         y_train=y_train,
         x_train=x_train,
@@ -59,11 +59,6 @@ def evaluate(
     model_name: Annotated[str, Argument(envvar="MODEL_NAME")],
 ) -> None:
     helpers.logger.init()
-
-    import logging
-    con = helpers.download.get_db(cache_dir=cache_dir)
-    x = con.execute("SELECT quantity_sold FROM data").fetch_df().describe().to_dict()["quantity_sold"]
-    logging.info(x)
 
     x_test, y_test = helpers.download.get_test_data(cache_dir=cache_dir)
     model = helpers.download.get_model(

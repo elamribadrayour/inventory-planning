@@ -34,27 +34,31 @@ def set_features_table(con: DuckDBPyConnection) -> None:
     con.execute(open("sql/set_features_table.sql").read())
 
 
-def get_train_test_split(con: DuckDBPyConnection) -> tuple[pandas.DataFrame, pandas.DataFrame]:
+def get_train_test_split(
+    con: DuckDBPyConnection,
+) -> tuple[pandas.DataFrame, pandas.DataFrame]:
     data_frame = con.execute("SELECT * FROM features").fetch_df()
-    
+
     test_list = list()
     train_list = list()
-    
+
     unique_skus = data_frame["sku"].unique()
-    
+
     for sku in unique_skus:
         sku_data = data_frame[data_frame["sku"] == sku].sort_values(by="dt_submitted")
-        
+
         if len(sku_data) > 1:
-            sku_train_data, sku_test_data = train_test_split(sku_data, test_size=0.2, random_state=42)
+            sku_train_data, sku_test_data = train_test_split(
+                sku_data, test_size=0.2, random_state=42
+            )
             train_list.append(sku_train_data)
             test_list.append(sku_test_data)
         else:
             train_list.append(sku_data)
-    
+
     train_data = pandas.concat(train_list)
     test_data = pandas.concat(test_list)
-    
+
     return train_data, test_data
 
 

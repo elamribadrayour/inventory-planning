@@ -6,7 +6,6 @@ from api.routers import other, predict
 import helpers.lifespan
 
 
-
 def set_api() -> FastAPI:
     api = FastAPI(
         title="Inventory planning API",

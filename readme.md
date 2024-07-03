@@ -110,3 +110,5 @@ The following ports are exposed in the Docker Compose configuration:
 ## Notebook
 
 Please find an explanatory notebook in here: [Notebook](src/main.ipynb)
+
+For more information on data preparation and model choise, you can check in here: [Notebook](src/exploration.ipynb)
